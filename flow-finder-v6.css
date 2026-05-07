@@ -1,0 +1,1100 @@
+/* =========================================================================
+   Flow Finder v6 styles
+   Self-scoped under .ff so it can't leak to the rest of the WordPress page.
+   ========================================================================= */
+
+#flow-finder-root {
+  /* CSS variables — all theming lives here. */
+
+  /* Editorial neutrals */
+  --ff-bg: #fafaf7;
+  --ff-surface: #ffffff;
+  --ff-ink: #1a1a1a;
+  --ff-ink-soft: #555;
+  --ff-ink-faint: #8a8a8a;
+  --ff-rule: #e6e3dc;
+  --ff-rule-soft: #f0eee8;
+
+  /* Phase accents */
+  --ff-focus: #1a3a52;        /* deep navy — the WinWithFlynn anchor */
+  --ff-focus-glow: #2d5b7e;
+  --ff-break: #6b8e4e;        /* mossy green — break = nature, recovery */
+  --ff-break-glow: #8aa86a;
+
+  /* Mode tinting (subtle, used on active tab underline only) */
+  --ff-mode-classic: #c0392b;
+  --ff-mode-balanced: #d4923f;
+  --ff-mode-ultradian: #1a3a52;
+  --ff-mode-extended: #4a3a6e;
+  --ff-mode-custom: #5a5a5a;
+
+  /* Status */
+  --ff-success: #5d8a3a;
+  --ff-warning: #c0392b;
+
+  /* Type */
+  --ff-display-font: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+  --ff-body-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --ff-mono-font: "SF Mono", "Menlo", "Consolas", monospace;
+
+  /* Spacing scale */
+  --ff-s-1: 4px;
+  --ff-s-2: 8px;
+  --ff-s-3: 12px;
+  --ff-s-4: 16px;
+  --ff-s-5: 24px;
+  --ff-s-6: 32px;
+  --ff-s-7: 48px;
+  --ff-s-8: 64px;
+
+  /* Radii */
+  --ff-r-sm: 4px;
+  --ff-r-md: 8px;
+  --ff-r-lg: 16px;
+  --ff-r-pill: 999px;
+
+  /* Shadows */
+  --ff-shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.04), 0 1px 3px rgba(20, 20, 20, 0.04);
+  --ff-shadow-md: 0 4px 12px rgba(20, 20, 20, 0.06), 0 2px 4px rgba(20, 20, 20, 0.04);
+  --ff-shadow-lg: 0 12px 40px rgba(20, 20, 20, 0.12), 0 4px 12px rgba(20, 20, 20, 0.06);
+
+  /* Transitions */
+  --ff-trans: 220ms cubic-bezier(0.2, 0, 0.2, 1);
+
+  font-family: var(--ff-body-font);
+  color: var(--ff-ink);
+  line-height: 1.5;
+}
+
+#flow-finder-root *,
+#flow-finder-root *::before,
+#flow-finder-root *::after {
+  box-sizing: border-box;
+}
+
+/* -----------------------------------------------------------------------
+   Container
+   ----------------------------------------------------------------------- */
+
+.ff {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--ff-s-6) var(--ff-s-5);
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-lg);
+  position: relative;
+  transition: border-color var(--ff-trans), box-shadow var(--ff-trans);
+}
+
+.ff[data-running="true"] {
+  box-shadow: var(--ff-shadow-md);
+}
+
+/* Phase-driven accent — applied to active elements */
+.ff[data-phase="work"] {
+  --ff-accent: var(--ff-focus);
+  --ff-accent-glow: var(--ff-focus-glow);
+}
+.ff[data-phase="break"] {
+  --ff-accent: var(--ff-break);
+  --ff-accent-glow: var(--ff-break-glow);
+}
+
+/* -----------------------------------------------------------------------
+   Mode tabs
+   ----------------------------------------------------------------------- */
+
+.ff-header {
+  margin-bottom: var(--ff-s-6);
+}
+
+.ff-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ff-s-1);
+  border-bottom: 1px solid var(--ff-rule);
+  padding-bottom: 0;
+  justify-content: center;
+}
+
+.ff-mode-tab {
+  background: transparent;
+  border: none;
+  padding: var(--ff-s-3) var(--ff-s-4);
+  font-family: var(--ff-body-font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ff-ink-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: color var(--ff-trans), border-color var(--ff-trans);
+  letter-spacing: 0.01em;
+}
+
+.ff-mode-tab:hover {
+  color: var(--ff-ink);
+}
+
+.ff-mode-tab.is-active {
+  color: var(--ff-ink);
+  border-bottom-color: var(--ff-accent);
+}
+
+.ff-mode-short {
+  font-family: var(--ff-mono-font);
+  font-size: 10px;
+  color: var(--ff-ink-faint);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ff-mode-tab.is-active .ff-mode-short {
+  color: var(--ff-accent);
+}
+
+/* -----------------------------------------------------------------------
+   Stage (timer area)
+   ----------------------------------------------------------------------- */
+
+.ff-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ff-phase-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ff-s-2);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ff-ink-faint);
+  margin-bottom: var(--ff-s-5);
+  position: relative;
+}.ff-phase-text {
+  color: var(--ff-accent);
+}
+
+.ff-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ff-ink-faint);
+  display: inline-block;
+  transition: background var(--ff-trans);
+  position: relative;
+}
+
+.ff-status-dot[data-state="running"] {
+  background: var(--ff-accent);
+  box-shadow: 0 0 0 0 var(--ff-accent);
+  animation: ff-pulse 2s ease-out infinite;
+}
+
+@keyframes ff-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--ff-accent-glow);
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+    opacity: 0.85;
+  }
+}
+
+.ff-info-btn {
+  background: transparent;
+  border: 1px solid var(--ff-rule);
+  color: var(--ff-ink-faint);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  margin-left: var(--ff-s-1);
+  transition: all var(--ff-trans);
+}
+
+.ff-info-btn:hover,
+.ff-info-btn[aria-expanded="true"] {
+  color: var(--ff-accent);
+  border-color: var(--ff-accent);
+}
+
+/* -----------------------------------------------------------------------
+   Info popover (click-toggle, replaces broken hover tooltip)
+   ----------------------------------------------------------------------- */
+
+.ff-info-popover {
+  position: absolute;
+  top: calc(100% + var(--ff-s-2));
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-md);
+  padding: var(--ff-s-5);
+  width: min(440px, calc(100vw - 48px));
+  text-align: left;
+  box-shadow: var(--ff-shadow-lg);
+  z-index: 10;
+  animation: ff-fade-in 200ms ease;
+
+  /* Reset inherited styles from .ff-phase-label */
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ff-ink);
+}
+
+/* Small caret pointing up to the info button */
+.ff-info-popover::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: var(--ff-surface);
+  border-left: 1px solid var(--ff-rule);
+  border-top: 1px solid var(--ff-rule);
+}
+
+.ff-info-popover h4 {
+  font-family: var(--ff-display-font);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 var(--ff-s-2) 0;
+  color: var(--ff-ink);
+}
+
+.ff-info-popover p {
+  font-size: 14px;
+  color: var(--ff-ink-soft);
+  margin: 0 0 var(--ff-s-3) 0;
+  line-height: 1.55;
+}
+
+.ff-info-popover p:last-of-type {
+  margin-bottom: 0;
+}
+
+.ff-info-popover strong {
+  color: var(--ff-ink);
+  font-weight: 600;
+}
+
+.ff-pop-desc {
+  font-style: italic;
+  color: var(--ff-accent) !important;
+  font-size: 15px !important;
+}
+
+.ff-pop-close {
+  position: absolute;
+  top: var(--ff-s-2);
+  right: var(--ff-s-2);
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ff-ink-faint);
+  cursor: pointer;
+  border-radius: var(--ff-r-sm);
+}
+
+.ff-pop-close:hover {
+  background: var(--ff-rule-soft);
+  color: var(--ff-ink);
+}
+
+/* -----------------------------------------------------------------------
+   Time display
+   ----------------------------------------------------------------------- */
+
+.ff-time {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--ff-s-6);
+}
+
+.ff-progress-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ff-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ff-progress-track {
+  fill: none;
+  stroke: var(--ff-rule);
+  stroke-width: 2;
+}
+
+.ff-progress-bar {
+  fill: none;
+  stroke: var(--ff-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 600ms cubic-bezier(0.2, 0, 0.2, 1),
+              stroke 400ms ease;
+}
+
+.ff-time-display {
+  font-family: var(--ff-display-font);
+  font-size: 96px;
+  font-weight: 400;
+  color: var(--ff-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.ff-colon {
+  color: var(--ff-ink-faint);
+  margin: 0 4px;
+  position: relative;
+  top: -8px;
+  animation: none;
+}
+
+.ff[data-running="true"] .ff-colon {
+  animation: ff-blink 1s steps(2, start) infinite;
+}
+
+@keyframes ff-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Controls
+   ----------------------------------------------------------------------- */
+
+.ff-controls {
+  display: flex;
+  gap: var(--ff-s-3);
+  align-items: center;
+  margin-bottom: var(--ff-s-5);
+}
+
+.ff-btn {
+  font-family: var(--ff-body-font);
+  font-size: 14px;
+  font-weight: 500;
+  padding: var(--ff-s-3) var(--ff-s-5);
+  border-radius: var(--ff-r-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--ff-trans);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ff-btn-primary {
+  background: var(--ff-accent);
+  color: white;
+  font-size: 16px;
+  padding: var(--ff-s-4) var(--ff-s-7);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  min-width: 140px;
+  box-shadow: var(--ff-shadow-sm);
+}
+
+.ff-btn-primary:hover {
+  background: var(--ff-accent-glow);
+  transform: translateY(-1px);
+  box-shadow: var(--ff-shadow-md);
+}
+
+.ff-btn-primary:active {
+  transform: translateY(0);
+}
+
+.ff-btn-ghost {
+  background: transparent;
+  color: var(--ff-ink-soft);
+  border-color: var(--ff-rule);
+}
+
+.ff-btn-ghost:hover {
+  background: var(--ff-rule-soft);
+  color: var(--ff-ink);
+  border-color: var(--ff-ink-faint);
+}
+
+.ff-btn-secondary {
+  background: var(--ff-ink);
+  color: var(--ff-bg);
+  border-color: var(--ff-ink);
+}
+
+.ff-btn-secondary:hover {
+  background: var(--ff-ink-soft);
+  border-color: var(--ff-ink-soft);
+}
+
+/* -----------------------------------------------------------------------
+   Tip + today counter
+   ----------------------------------------------------------------------- */
+
+.ff-tip {
+  font-family: var(--ff-display-font);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ff-ink-soft);
+  max-width: 480px;
+  text-align: center;
+  margin: var(--ff-s-2) 0 var(--ff-s-5);
+  line-height: 1.5;
+  padding: 0 var(--ff-s-4);
+  border-left: 2px solid var(--ff-accent);
+  border-right: 2px solid var(--ff-accent);
+  animation: ff-fade-in 600ms ease;
+}
+
+@keyframes ff-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ff-today {
+  font-size: 12px;
+  color: var(--ff-ink-faint);
+  letter-spacing: 0.04em;
+  margin-top: var(--ff-s-3);
+}
+
+.ff-today-count,
+.ff-today-mins {
+  font-weight: 600;
+  color: var(--ff-ink);
+}
+
+.ff-today-sep {
+  margin: 0 var(--ff-s-2);
+}
+
+/* -----------------------------------------------------------------------
+   Tasks
+   ----------------------------------------------------------------------- */
+
+.ff-tasks {
+  margin-top: var(--ff-s-7);
+  padding-top: var(--ff-s-5);
+  border-top: 1px solid var(--ff-rule);
+}
+
+.ff-tasks-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--ff-s-3);
+}
+
+.ff-tasks-head h3 {
+  font-family: var(--ff-display-font);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ff-ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.ff-link {
+  background: transparent;
+  border: none;
+  color: var(--ff-ink-faint);
+  font-size: 12px;
+  cursor: pointer;
+  padding: var(--ff-s-1) var(--ff-s-2);
+  border-radius: var(--ff-r-sm);
+  letter-spacing: 0.02em;
+  font-family: var(--ff-body-font);
+  transition: color var(--ff-trans);
+}
+
+.ff-link:hover {
+  color: var(--ff-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ff-task-list {
+  margin-bottom: var(--ff-s-4);
+}
+
+.ff-empty {
+  font-family: var(--ff-display-font);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ff-ink-faint);
+  text-align: center;
+  padding: var(--ff-s-5) 0;
+  margin: 0;
+}
+
+.ff-task {
+  display: flex;
+  align-items: center;
+  gap: var(--ff-s-3);
+  padding: var(--ff-s-3) var(--ff-s-4);
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-md);
+  margin-bottom: var(--ff-s-2);
+  background: var(--ff-surface);
+  transition: all var(--ff-trans);
+}
+
+.ff-task.is-active {
+  border-color: var(--ff-accent);
+  background: linear-gradient(to right, color-mix(in srgb, var(--ff-accent) 4%, white), white 30%);
+}
+
+.ff-task.is-done {
+  opacity: 0.5;
+}
+
+.ff-task.is-done .ff-task-text {
+  text-decoration: line-through;
+}
+
+.ff-task-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ff-rule);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 0;
+  transition: all var(--ff-trans);
+}
+
+.ff-task.is-done .ff-task-check {
+  background: var(--ff-success);
+  border-color: var(--ff-success);
+}
+
+.ff-task-check:hover {
+  border-color: var(--ff-ink);
+}
+
+.ff-task-text {
+  flex: 1;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: var(--ff-body-font);
+  font-size: 15px;
+  color: var(--ff-ink);
+  cursor: pointer;
+  padding: 0;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.ff-task-text:hover {
+  color: var(--ff-accent);
+}
+
+.ff-task-progress {
+  font-family: var(--ff-mono-font);
+  font-size: 12px;
+  color: var(--ff-ink-faint);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.ff-task.is-active .ff-task-progress {
+  color: var(--ff-accent);
+  font-weight: 600;
+}
+
+.ff-task-del {
+  background: transparent;
+  border: none;
+  color: var(--ff-ink-faint);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--ff-r-sm);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all var(--ff-trans);
+}
+
+.ff-task-del:hover {
+  background: var(--ff-rule-soft);
+  color: var(--ff-warning);
+}
+
+.ff-task-form {
+  display: flex;
+  gap: var(--ff-s-2);
+  align-items: stretch;
+}
+
+.ff-task-input {
+  flex: 1;
+  padding: var(--ff-s-3) var(--ff-s-4);
+  font-family: var(--ff-body-font);
+  font-size: 14px;
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-md);
+  background: var(--ff-bg);
+  color: var(--ff-ink);
+  transition: border-color var(--ff-trans), background var(--ff-trans);
+}
+
+.ff-task-input:focus,
+.ff-task-est:focus {
+  outline: none;
+  border-color: var(--ff-accent);
+  background: white;
+}
+
+.ff-task-est {
+  width: 90px;
+  padding: var(--ff-s-3) var(--ff-s-3);
+  font-family: var(--ff-body-font);
+  font-size: 14px;
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-md);
+  background: var(--ff-bg);
+  color: var(--ff-ink);
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------------
+   Footer
+   ----------------------------------------------------------------------- */
+
+.ff-footer {
+  text-align: center;
+  margin-top: var(--ff-s-5);
+  padding-top: var(--ff-s-4);
+  border-top: 1px solid var(--ff-rule-soft);
+}
+
+.ff-footer .ff-link {
+  font-size: 13px;
+}
+
+/* -----------------------------------------------------------------------
+   Modal (settings)
+   ----------------------------------------------------------------------- */
+
+.ff-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ff-modal[hidden] {
+  display: none;
+}
+
+.ff-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(2px);
+  animation: ff-fade-in 200ms ease;
+}
+
+.ff-modal-card {
+  position: relative;
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-lg);
+  padding: var(--ff-s-7) var(--ff-s-6);
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  box-shadow: var(--ff-shadow-lg);
+  animation: ff-modal-in 280ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@keyframes ff-modal-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ff-modal-card h2 {
+  font-family: var(--ff-display-font);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ff-ink);
+  margin: 0 0 var(--ff-s-5) 0;
+  letter-spacing: -0.02em;
+}
+
+.ff-modal-close {
+  position: absolute;
+  top: var(--ff-s-3);
+  right: var(--ff-s-3);
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ff-ink-faint);
+  cursor: pointer;
+  border-radius: var(--ff-r-sm);
+  transition: all var(--ff-trans);
+}
+
+.ff-modal-close:hover {
+  background: var(--ff-rule-soft);
+  color: var(--ff-ink);
+}
+
+.ff-setting-group {
+  margin-bottom: var(--ff-s-6);
+  padding-bottom: var(--ff-s-5);
+  border-bottom: 1px solid var(--ff-rule-soft);
+}
+
+.ff-setting-group:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ff-setting-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ff-ink-faint);
+  margin-bottom: var(--ff-s-3);
+}
+
+.ff-setting-desc {
+  font-size: 13px;
+  color: var(--ff-ink-soft);
+  margin: 0 0 var(--ff-s-3);
+  line-height: 1.5;
+}
+
+/* Sound picker */
+.ff-sound-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ff-s-2);
+}
+
+.ff-sound-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ff-s-2);
+  padding: var(--ff-s-3);
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-md);
+  background: var(--ff-surface);
+  transition: all var(--ff-trans);
+}
+
+.ff-sound-row.is-selected {
+  border-color: var(--ff-accent);
+  background: color-mix(in srgb, var(--ff-accent) 4%, white);
+}
+
+.ff-sound-pick {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.ff-sound-name {
+  font-family: var(--ff-body-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ff-ink);
+}
+
+.ff-sound-row.is-selected .ff-sound-name {
+  color: var(--ff-accent);
+}
+
+.ff-sound-desc {
+  font-size: 12px;
+  color: var(--ff-ink-faint);
+  font-style: italic;
+}
+
+.ff-sound-preview {
+  background: transparent;
+  border: 1px solid var(--ff-rule);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ff-ink-soft);
+  flex-shrink: 0;
+  transition: all var(--ff-trans);
+}
+
+.ff-sound-preview:hover {
+  background: var(--ff-accent);
+  border-color: var(--ff-accent);
+  color: white;
+}
+
+/* Volume slider */
+.ff-volume {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--ff-rule);
+  border-radius: var(--ff-r-pill);
+  outline: none;
+}
+
+.ff-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ff-accent);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: var(--ff-shadow-sm);
+}
+
+.ff-volume::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ff-accent);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: var(--ff-shadow-sm);
+}
+
+/* Custom timer inputs */
+.ff-custom-row {
+  display: flex;
+  gap: var(--ff-s-4);
+}
+
+.ff-custom-row label {
+  display: flex;
+  align-items: center;
+  gap: var(--ff-s-2);
+  font-size: 13px;
+  color: var(--ff-ink-soft);
+  font-weight: 500;
+}
+
+.ff-custom-row input {
+  width: 64px;
+  padding: var(--ff-s-2) var(--ff-s-3);
+  font-family: var(--ff-mono-font);
+  font-size: 14px;
+  border: 1px solid var(--ff-rule);
+  border-radius: var(--ff-r-sm);
+  background: var(--ff-bg);
+  text-align: center;
+}
+
+.ff-custom-row input:focus {
+  outline: none;
+  border-color: var(--ff-accent);
+  background: white;
+}
+
+.ff-custom-row span {
+  font-size: 12px;
+  color: var(--ff-ink-faint);
+}
+
+/* Notification status text */
+.ff-notif-status {
+  display: inline-block;
+  margin-left: var(--ff-s-3);
+  font-size: 13px;
+  color: var(--ff-ink-faint);
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.ff-credit {
+  font-size: 11px;
+  color: var(--ff-ink-faint);
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.05em;
+  font-style: italic;
+  font-family: var(--ff-display-font);
+}
+
+.ff-credit a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ff-rule);
+}
+
+.ff-credit a:hover {
+  color: var(--ff-accent);
+  border-bottom-color: var(--ff-accent);
+}
+
+/* -----------------------------------------------------------------------
+   Mobile
+   ----------------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .ff {
+    padding: var(--ff-s-5) var(--ff-s-4);
+  }
+
+  .ff-modes {
+    gap: 0;
+  }
+
+  .ff-mode-tab {
+    padding: var(--ff-s-2) var(--ff-s-2);
+    font-size: 12px;
+  }
+
+  .ff-mode-short {
+    font-size: 9px;
+  }
+
+  .ff-time {
+    width: 260px;
+    height: 260px;
+  }
+
+  .ff-time-display {
+    font-size: 76px;
+  }
+
+  .ff-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ff-btn-primary {
+    padding: var(--ff-s-3) var(--ff-s-5);
+    min-width: 120px;
+  }
+
+  .ff-task-form {
+    flex-wrap: wrap;
+  }
+
+  .ff-task-input {
+    flex: 1 1 100%;
+  }
+
+  .ff-task-est {
+    flex: 1 1 80px;
+  }
+
+  .ff-modal-card {
+    padding: var(--ff-s-6) var(--ff-s-4);
+  }
+
+  .ff-modal-card h2 {
+    font-size: 26px;
+  }
+
+  .ff-info-popover {
+    width: calc(100vw - 32px);
+  }
+}
+
+@media (max-width: 400px) {
+  .ff-time {
+    width: 220px;
+    height: 220px;
+  }
+
+  .ff-time-display {
+    font-size: 64px;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Reduced motion
+   ----------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-status-dot[data-state="running"] {
+    animation: none;
+  }
+  .ff[data-running="true"] .ff-colon {
+    animation: none;
+  }
+  .ff-progress-bar {
+    transition: none;
+  }
+  .ff-modal-card,
+  .ff-tip,
+  .ff-modal-backdrop {
+    animation: none;
+  }
+}
